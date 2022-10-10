@@ -47,12 +47,28 @@ struct pieza
 	coord ori;
 	coord peri[3];
 	char D;
+	coord posicion(int n);
+};
+// esta funcion es para pasar directo los datos del tama;o de los tipos de barco
+//el segundp se deja en blaco la ultima posicion por que solo queremos que tome dos posiciones
+//el ultimo es la fragata y no ocupa ningun espacio
+coord peris[4][3]={{{2,0},{4,0},{6,0}},
+					{{2,0},{4,0},{  }},
+					{{2,0},{4,0},{  }},
+					{{ },{ },{ }},
 };
 
-
-
-
-
+coord pieza::posicion(int n)
+{
+	coord ret={ori.x, ori.y};
+	if(n!=0)
+	{
+		ret.x+=peri[n-1].x;
+		ret.y+=peri[n-1].y;
+	}
+	return ret;
+} 					
+char barcos[4]={'P','S','D','F'};
 
 class enemigo{
 	private:
@@ -68,21 +84,39 @@ class jugador{
 	
 	public:
 		void pintar(pieza &);
+		void rotar(pieza &);
+		coord rotar(coord &);
+		void seleccionar(pieza &, int);
 		
 };
 //funcion para imprimir porta aviones, se repite 4 veces por que portaaviones sera 4 casillas
 void jugador::pintar(pieza &P)
 {
-	gotoxy(P.ori.x,P.ori.y);cout<<P.D;
-	for(int i=0;i<3;i++)
+	//ma[P.ori.x][P.ori.y]=P.D;
+	//gotoxy(P.ori.x,P.ori.y);cout<<P.D;
+	for(int i=0;i<4;i++)
 	{
-		gotoxy(P.ori.x+P.peri[0].x,P.ori.y+P.peri[0].y);cout<<P.D;
+		coord c=P.posicion(i);
+		ma[c.x][c.y]=P.D;
 	}
 	
 
 }
+coord jugador::rotar(coord &c)
+{
+	coord ret={c.y,c.x};
+	return ret;
+};
 
-/*void enemigo::pintarmapa()
+void jugador::rotar(pieza &P)
+{
+	for(int i=0;i<3;i++)
+	{
+		P.peri[i]=jugador::rotar(P.peri[i]);
+		
+	}
+}
+void enemigo::pintarmapa()
 {
 	for(int i=0;i<22;i++)
 	{
@@ -93,56 +127,40 @@ void jugador::pintar(pieza &P)
 		}
 	}
 }
-void enemigo::pintar(int x, int y)
+// i vale 4 dependiendo la cantidad de tipos de barcos que se tiene
+void jugador::seleccionar(pieza &P, int r)
 {
-	gotoxy(x,y);
-	cout<<"O";
-}
-//esta funcion es para borrar el rastro del parametro ingresado O
-void enemigo::borrar(int x,int y)
-
-{
-	gotoxy(x,y);
-	cout<<" ";
-}
-
-// se cambi a los valores sumando dos posiciones para que los movimientos coincidan con la tabla impresa
-// se agrega && para que no se saga de la tabla
-void enemigo:: mover(int &x,int &y)
-{
-	if(kbhit())
+	P.ori.x=2;
+	P.ori.y=2;
+	P.D=barcos[r];
+	for(int i=0;i<3;i++)
 	{
-		enemigo::borrar(x,y);
-		char tecla= getch();
-		if(tecla=='a'&& x>2) x=x-2;
-		if(tecla=='d'&& x<20) x=x+2;
-		if(tecla=='w'&& y>3) y=y-2;
-		if(tecla=='s'&& y<21) y=y+2;
-		enemigo::pintar(x,y);
+		P.peri[i]=peris[r][i];
+		
 	}
 }
-*/
+
 int main ()
 {
 	enemigo a;
 	jugador b;
+	pieza S;
+	int r=0;
+	b.seleccionar(S,r);
+	
 	//2,28 corresponde a origen y lo demas a perifericos
-	pieza c={{2,28},{{2,0},{4,0},{6,0}},'P'};
+	//pieza c={{2,28},{{2,0},{4,0},{6,0}},'P'};
+	//pieza v={{2,28},{{2,0},{4,0},{6,0}},'P'};
 	// se declara q1 y w1 por que se esta pasando una direccion en lugar de un valor para permitir borrar las O al cambiar de posicion
 	// se cambio los valores a 2 y 3 para que coincida con la tabla impresa en ma
-	int q1=2,w1=3;
-	int q2=2,w2=28;
-	b.pintar(c);
-	/*a.pintarmapa();
-	gotoxy(0,25);
-	a.pintarmapa();*/
-	//b.pintar_portaaviones(2,28,1);
-	// solo se ejecutara un vez mover a.pintar(10,10);
-	/*while(true)
-	{
-		//a.mover(q1,w1);
-		b.mover_portaaviones(q2,w2,0);
-	}*/
+	//b.pintar(v);
+	//b.rotar(c);
+	b.pintar(S);
+	a.pintarmapa();
+	//gotoxy(0,25);
+	a.pintarmapa();
+	return 0;
 	
 }
+
 
