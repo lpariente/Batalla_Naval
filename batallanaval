@@ -1,0 +1,24 @@
+#include<iostream>
+#include<windows.h>
+#include<conio.h>
+
+using namespace std;
+
+
+class enemigo{
+	private:
+		public:
+			void pintar();
+};
+
+void enemigo::pintar()
+{
+	cout<<"O";
+}
+
+int main ()
+{
+	enemigo a;
+	
+	a.pintar();
+}
