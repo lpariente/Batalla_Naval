@@ -46,6 +46,37 @@ class enemigo{
 			void borrar(int,int);
 			void mover(int &, int &);
 };
+// para crear naves para el tablero
+
+class jugador{
+	
+	public:
+		void pintar_portaaviones(int,int,int);
+		void borrar_portaaviones(int,int,int);
+		void moverportaaviones(int &,int &,int);
+};
+//funcion para imprimir porta aviones, se repite 4 veces por que portaaviones sera 4 casillas
+
+void jugador::pintar_portaaviones(int x, int y, int c)
+{
+	if(c==0)
+	{
+		gotoxy(x,y);cout<<"P";
+		gotoxy(x,y+2);cout<<"P";
+		gotoxy(x,y+4);cout<<"P";
+		gotoxy(x,y+6);cout<<"P";
+		
+	}
+	else
+	{
+		gotoxy(x,y);cout<<"P";
+		gotoxy(x+2,y);cout<<"P";
+		gotoxy(x+4,y);cout<<"P";
+		gotoxy(x+6,y);cout<<"P";
+		
+	}
+}
+
 void enemigo::pintarmapa()
 {
 	for(int i=0;i<22;i++)
@@ -70,17 +101,18 @@ void enemigo::borrar(int x,int y)
 	cout<<" ";
 }
 
-
+// se cambi a los valores sumando dos posiciones para que los movimientos coincidan con la tabla impresa
+// se agrega && para que no se saga de la tabla
 void enemigo:: mover(int &x,int &y)
 {
 	if(kbhit())
 	{
 		enemigo::borrar(x,y);
 		char tecla= getch();
-		if(tecla=='a') x--;
-		if(tecla=='d') x++;
-		if(tecla=='w') y--;
-		if(tecla=='s') y++;
+		if(tecla=='a'&& x>2) x=x-2;
+		if(tecla=='d'&& x<20) x=x+2;
+		if(tecla=='w'&& y>3) y=y-2;
+		if(tecla=='s'&& y<21) y=y+2;
 		enemigo::pintar(x,y);
 	}
 }
@@ -88,9 +120,15 @@ void enemigo:: mover(int &x,int &y)
 int main ()
 {
 	enemigo a;
+	jugador b;
 	// se declara q1 y w1 por que se esta pasando una direccion en lugar de un valor para permitir borrar las O al cambiar de posicion
-	int q1=5,w1=5;
+	// se cambio los valores a 2 y 3 para que coincida con la tabla impresa en ma
+	int q1=2,w1=3;
+	int q2=2,w2=28;
 	a.pintarmapa();
+	gotoxy(0,25);
+	a.pintarmapa();
+	b.pintar_portaaviones(2,28,0);
 	// solo se ejecutara un vez mover a.pintar(10,10);
 	while(true)
 	{
@@ -98,3 +136,4 @@ int main ()
 	}
 	
 }
+
