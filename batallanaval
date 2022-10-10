@@ -37,6 +37,22 @@ char ma[22][22] =   {{' ',' ','A',' ','B',' ','C',' ','D',' ','E',' ','F',' ','G
        {'9','|',' ','|',' ','|',' ','|',' ','|',' ','|',' ','|',' ','|',' ','|',' ','|',' ','|'},
        {' ',' ','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-',' '},};
 
+struct coord
+{
+	int x,y;
+};
+//la estructura perenece a la coordenada original quien se encargara de moverse
+struct pieza
+{
+	coord ori;
+	coord peri[3];
+	char D;
+};
+
+
+
+
+
 
 class enemigo{
 	private:
@@ -51,83 +67,22 @@ class enemigo{
 class jugador{
 	
 	public:
-		void pintar_portaaviones(int,int,int);
-		void borrar_portaaviones(int,int,int);
-		void mover_portaaviones(int &,int &,int);
+		void pintar(pieza &);
+		
 };
 //funcion para imprimir porta aviones, se repite 4 veces por que portaaviones sera 4 casillas
-
-void jugador::pintar_portaaviones(int x, int y, int c)
+void jugador::pintar(pieza &P)
 {
-	if(c==0)
+	gotoxy(P.ori.x,P.ori.y);cout<<P.D;
+	for(int i=0;i<3;i++)
 	{
-		gotoxy(x,y);cout<<"P";
-		gotoxy(x,y+2);cout<<"P";
-		gotoxy(x,y+4);cout<<"P";
-		gotoxy(x,y+6);cout<<"P";
-		
+		gotoxy(P.ori.x+P.peri[0].x,P.ori.y+P.peri[0].y);cout<<P.D;
 	}
-	else
-	{
-		gotoxy(x,y);cout<<"P";
-		gotoxy(x+2,y);cout<<"P";
-		gotoxy(x+4,y);cout<<"P";
-		gotoxy(x+6,y);cout<<"P";
-		
-	}
+	
+
 }
 
-void jugador::borrar_portaaviones(int x, int y, int c)
-{
-	if(c==0)
-	{
-		gotoxy(x,y);cout<<" ";
-		gotoxy(x,y+2);cout<<" ";
-		gotoxy(x,y+4);cout<<" ";
-		gotoxy(x,y+6);cout<<" ";
-		
-	}
-	else
-	{
-		gotoxy(x,y);cout<<" ";
-		gotoxy(x+2,y);cout<<" ";
-		gotoxy(x+4,y);cout<<" ";
-		gotoxy(x+6,y);cout<<" ";
-		
-	}
-}
-
-void jugador::mover_portaaviones(int &x, int &y, int c)
-{
-	if(kbhit())
-	{
-		jugador::borrar_portaaviones(x,y,c);
-		char tecla= getch();
-		if(tecla=='a'&& x>2) x=x-2;
-		if(c==0)
-		{
-			if(tecla=='d'&& x<20) x=x+2;
-		}
-		if(c==1)
-		{
-			//se ingresa 14 para que no se salga del mapa
-			if(tecla=='d'&& x<14) x=x+2;
-		}
-		if(tecla=='w'&& y>28) y=y-2;
-		if(c==0)
-		{
-			if(tecla=='s'&& y<40) y=y+2;
-		}
-		if(c==1)
-		{
-			if(tecla=='s'&& y<46) y=y+2;
-		}
-		//if(tecla=='s'&& y<46) y=y+2;
-		jugador::pintar_portaaviones(x,y,c);
-	}
-}
-
-void enemigo::pintarmapa()
+/*void enemigo::pintarmapa()
 {
 	for(int i=0;i<22;i++)
 	{
@@ -166,25 +121,28 @@ void enemigo:: mover(int &x,int &y)
 		enemigo::pintar(x,y);
 	}
 }
-
+*/
 int main ()
 {
 	enemigo a;
 	jugador b;
+	//2,28 corresponde a origen y lo demas a perifericos
+	pieza c={{2,28},{{2,0},{4,0},{6,0}},'P'};
 	// se declara q1 y w1 por que se esta pasando una direccion en lugar de un valor para permitir borrar las O al cambiar de posicion
 	// se cambio los valores a 2 y 3 para que coincida con la tabla impresa en ma
 	int q1=2,w1=3;
 	int q2=2,w2=28;
-	a.pintarmapa();
+	b.pintar(c);
+	/*a.pintarmapa();
 	gotoxy(0,25);
-	a.pintarmapa();
+	a.pintarmapa();*/
 	//b.pintar_portaaviones(2,28,1);
 	// solo se ejecutara un vez mover a.pintar(10,10);
-	while(true)
+	/*while(true)
 	{
 		//a.mover(q1,w1);
 		b.mover_portaaviones(q2,w2,0);
-	}
+	}*/
 	
 }
 
