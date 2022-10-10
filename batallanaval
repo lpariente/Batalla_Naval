@@ -104,9 +104,25 @@ void jugador::mover_portaaviones(int &x, int &y, int c)
 		jugador::borrar_portaaviones(x,y,c);
 		char tecla= getch();
 		if(tecla=='a'&& x>2) x=x-2;
-		if(tecla=='d'&& x<20) x=x+2;
-		if(tecla=='w'&& y>3) y=y-2;
-		if(tecla=='s'&& y<21) y=y+2;
+		if(c==0)
+		{
+			if(tecla=='d'&& x<20) x=x+2;
+		}
+		if(c==1)
+		{
+			//se ingresa 14 para que no se salga del mapa
+			if(tecla=='d'&& x<14) x=x+2;
+		}
+		if(tecla=='w'&& y>28) y=y-2;
+		if(c==0)
+		{
+			if(tecla=='s'&& y<40) y=y+2;
+		}
+		if(c==1)
+		{
+			if(tecla=='s'&& y<46) y=y+2;
+		}
+		//if(tecla=='s'&& y<46) y=y+2;
 		jugador::pintar_portaaviones(x,y,c);
 	}
 }
@@ -162,7 +178,7 @@ int main ()
 	a.pintarmapa();
 	gotoxy(0,25);
 	a.pintarmapa();
-	b.pintar_portaaviones(2,28,1);
+	//b.pintar_portaaviones(2,28,1);
 	// solo se ejecutara un vez mover a.pintar(10,10);
 	while(true)
 	{
@@ -171,3 +187,4 @@ int main ()
 	}
 	
 }
+
