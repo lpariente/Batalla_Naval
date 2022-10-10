@@ -84,11 +84,17 @@ class jugador{
 	
 	public:
 		void pintar(pieza &);
+		void borrar(pieza &);
 		void rotar(pieza &);
 		coord rotar(coord &);
 		void seleccionar(pieza &, int);
+		void mover(pieza &);
+		bool colision(pieza &);
 		
 };
+
+
+
 //funcion para imprimir porta aviones, se repite 4 veces por que portaaviones sera 4 casillas
 void jugador::pintar(pieza &P)
 {
@@ -97,10 +103,18 @@ void jugador::pintar(pieza &P)
 	for(int i=0;i<4;i++)
 	{
 		coord c=P.posicion(i);
-		ma[c.x][c.y]=P.D;
+		ma[c.y][c.x]=P.D;
 	}
-	
-
+}
+void jugador::borrar(pieza &P)
+{
+	//ma[P.ori.x][P.ori.y]=P.D;
+	//gotoxy(P.ori.x,P.ori.y);cout<<P.D;
+	for(int i=0;i<4;i++)
+	{
+		coord c=P.posicion(i);
+		ma[c.y][c.x]=' ';
+	}
 }
 coord jugador::rotar(coord &c)
 {
@@ -139,28 +153,59 @@ void jugador::seleccionar(pieza &P, int r)
 		
 	}
 }
+void jugador::mover(pieza &P)
+{
+	if(kbhit())
+	{
+		pieza copia=P;
+		char tecla= getch();
+		if(tecla=='a')P.ori.x-=2;
+		if(tecla=='d')P.ori.x+=2;
+		if(tecla=='w')P.ori.y-=2;
+		if(tecla=='s')P.ori.y+=2;
+		if(jugador::colision(P))
+		{
+			//si la colision regresa verdadero tendra valor P antes de hacer el movimiento
+			P=copia;
+		}
+		jugador::borrar(copia);
+		jugador::pintar(P);
+	}
+}
+bool jugador::colision(pieza &P)
+{
+	for(int i=0;i<4;i++)
+	{
+		coord c=P.posicion(i);
+		if(c.x<2||c.x>20) return true;
+		if(c.y<2||c.y>20) return true;
+	}
+	return false;
+}
 
 int main ()
 {
 	enemigo a;
 	jugador b;
 	pieza S;
-	int r=0;
+	int r=2;
 	b.seleccionar(S,r);
-	
+	while(true)
+	{
+		gotoxy(0,25);
+		a.pintarmapa();
+		b.mover(S);
+	}
 	//2,28 corresponde a origen y lo demas a perifericos
 	//pieza c={{2,28},{{2,0},{4,0},{6,0}},'P'};
 	//pieza v={{2,28},{{2,0},{4,0},{6,0}},'P'};
 	// se declara q1 y w1 por que se esta pasando una direccion en lugar de un valor para permitir borrar las O al cambiar de posicion
 	// se cambio los valores a 2 y 3 para que coincida con la tabla impresa en ma
 	//b.pintar(v);
-	//b.rotar(c);
+	//b.rotar(S);
 	b.pintar(S);
 	a.pintarmapa();
-	//gotoxy(0,25);
-	a.pintarmapa();
+	
 	return 0;
 	
 }
-
-
