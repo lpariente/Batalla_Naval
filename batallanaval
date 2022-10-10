@@ -18,19 +18,37 @@ HANDLE hcon = GetStdHandle(STD_OUTPUT_HANDLE);
 class enemigo{
 	private:
 		public:
-			void pintar();
+			void pintar(int, int);
+			void mover(int, int);
 };
 
-void enemigo::pintar()
+void enemigo::pintar(int x, int y)
 {
-	gotoxy(5,5);
+	gotoxy(x,y);
 	cout<<"O";
+}
+void enemigo:: mover(int x,int y)
+{
+	if(kbhit())
+	{
+		char tecla= getch();
+		if(tecla=='a') x--;
+		if(tecla=='d') x++;
+		if(tecla=='w') y--;
+		if(tecla=='s') y++;
+		enemigo::pintar(x,y);
+	}
 }
 
 int main ()
 {
 	enemigo a;
 	
-	a.pintar();
+	// solo se ejecutara un vez mover a.pintar(10,10);
+	while(true)
+	{
+		a.mover(5,5);
+	}
+	
 }
 
