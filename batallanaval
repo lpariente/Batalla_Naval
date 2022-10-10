@@ -4,6 +4,16 @@
 
 using namespace std;
 
+//funcion para mover caracteres por medio dle teclado
+void gotoxy(int x, int y){
+HANDLE hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+ COORD dwPos;
+ dwPos.X = x;
+ dwPos.Y = y;
+ SetConsoleCursorPosition(hcon, dwPos);
+}
+
+
 
 class enemigo{
 	private:
@@ -13,6 +23,7 @@ class enemigo{
 
 void enemigo::pintar()
 {
+	gotoxy(5,5);
 	cout<<"O";
 }
 
@@ -22,3 +33,4 @@ int main ()
 	
 	a.pintar();
 }
+
