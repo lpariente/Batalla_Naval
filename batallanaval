@@ -53,7 +53,7 @@ class jugador{
 	public:
 		void pintar_portaaviones(int,int,int);
 		void borrar_portaaviones(int,int,int);
-		void moverportaaviones(int &,int &,int);
+		void mover_portaaviones(int &,int &,int);
 };
 //funcion para imprimir porta aviones, se repite 4 veces por que portaaviones sera 4 casillas
 
@@ -74,6 +74,40 @@ void jugador::pintar_portaaviones(int x, int y, int c)
 		gotoxy(x+4,y);cout<<"P";
 		gotoxy(x+6,y);cout<<"P";
 		
+	}
+}
+
+void jugador::borrar_portaaviones(int x, int y, int c)
+{
+	if(c==0)
+	{
+		gotoxy(x,y);cout<<" ";
+		gotoxy(x,y+2);cout<<" ";
+		gotoxy(x,y+4);cout<<" ";
+		gotoxy(x,y+6);cout<<" ";
+		
+	}
+	else
+	{
+		gotoxy(x,y);cout<<" ";
+		gotoxy(x+2,y);cout<<" ";
+		gotoxy(x+4,y);cout<<" ";
+		gotoxy(x+6,y);cout<<" ";
+		
+	}
+}
+
+void jugador::mover_portaaviones(int &x, int &y, int c)
+{
+	if(kbhit())
+	{
+		jugador::borrar_portaaviones(x,y,c);
+		char tecla= getch();
+		if(tecla=='a'&& x>2) x=x-2;
+		if(tecla=='d'&& x<20) x=x+2;
+		if(tecla=='w'&& y>3) y=y-2;
+		if(tecla=='s'&& y<21) y=y+2;
+		jugador::pintar_portaaviones(x,y,c);
 	}
 }
 
@@ -128,12 +162,12 @@ int main ()
 	a.pintarmapa();
 	gotoxy(0,25);
 	a.pintarmapa();
-	b.pintar_portaaviones(2,28,0);
+	b.pintar_portaaviones(2,28,1);
 	// solo se ejecutara un vez mover a.pintar(10,10);
 	while(true)
 	{
-		a.mover(q1,w1);
+		//a.mover(q1,w1);
+		b.mover_portaaviones(q2,w2,0);
 	}
 	
 }
-
