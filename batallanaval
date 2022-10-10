@@ -47,6 +47,7 @@ struct pieza
 	coord ori;
 	coord peri[3];
 	char D;
+	char d='*';
 	coord posicion(int n);
 };
 // esta funcion es para pasar directo los datos del tama;o de los tipos de barco
@@ -69,21 +70,17 @@ coord pieza::posicion(int n)
 	return ret;
 } 					
 char barcos[4]={'P','S','D','F'};
+// es para que imprima la tabla
+char ju[22][22];
 
-class enemigo{
-	private:
-		public:
-			void pintarmapa();
-			void pintar(int, int);
-			void borrar(int,int);
-			void mover(int &, int &);
-};
 // para crear naves para el tablero
 
 class jugador{
 	
 	public:
-		void pintar(pieza &);
+		void pasarmapa();
+		void dibujarmapaju();
+		void pintar(pieza &,int);
 		void borrar(pieza &);
 		void rotar(pieza &);
 		coord rotar(coord &);
@@ -93,18 +90,52 @@ class jugador{
 		
 };
 
-
+void jugador::pasarmapa()
+{
+	for(int i=0;i<22;i++)
+	{
+		cout<<endl;
+		for(int j=0;j<22;j++)
+		{
+			ju[i][j]=ma[i][j];
+		}
+	}
+}
+void jugador::dibujarmapaju()
+{
+	for(int i=0;i<22;i++)
+	{
+		cout<<endl;
+		for(int j=0;j<22;j++)
+		{
+			cout<<ju[i][j];
+		}
+	}
+}
 
 //funcion para imprimir porta aviones, se repite 4 veces por que portaaviones sera 4 casillas
-void jugador::pintar(pieza &P)
+void jugador::pintar(pieza &P,int r)
 {
 	//ma[P.ori.x][P.ori.y]=P.D;
 	//gotoxy(P.ori.x,P.ori.y);cout<<P.D;
-	for(int i=0;i<4;i++)
+	if(r==1)
 	{
-		coord c=P.posicion(i);
-		ma[c.y][c.x]=P.D;
+		for(int i=0;i<4;i++)
+		{
+			coord c=P.posicion(i);
+			ju[c.y][c.x]=P.d;
+		}
+	
 	}
+	else
+	{
+		for(int i=0;i<4;i++)
+		{
+			coord c=P.posicion(i);
+			ju[c.y][c.x]=P.D;
+		}
+	}
+	
 }
 void jugador::borrar(pieza &P)
 {
@@ -113,7 +144,7 @@ void jugador::borrar(pieza &P)
 	for(int i=0;i<4;i++)
 	{
 		coord c=P.posicion(i);
-		ma[c.y][c.x]=' ';
+		ju[c.y][c.x]=' ';
 	}
 }
 coord jugador::rotar(coord &c)
@@ -130,7 +161,7 @@ void jugador::rotar(pieza &P)
 		
 	}
 }
-void enemigo::pintarmapa()
+/*void enemigo::pintarmapa()
 {
 	for(int i=0;i<22;i++)
 	{
@@ -140,7 +171,8 @@ void enemigo::pintarmapa()
 			cout<<ma[i][j];
 		}
 	}
-}
+}*/
+/////////////////////////////////////////////////
 // i vale 4 dependiendo la cantidad de tipos de barcos que se tiene
 void jugador::seleccionar(pieza &P, int r)
 {
@@ -163,13 +195,19 @@ void jugador::mover(pieza &P)
 		if(tecla=='d')P.ori.x+=2;
 		if(tecla=='w')P.ori.y-=2;
 		if(tecla=='s')P.ori.y+=2;
+		if(tecla=='c')
+		{
+			//al presionar la letra c rotara de horizontal a vertical y biseversa
+			jugador::rotar(P);
+		}
+		
 		if(jugador::colision(P))
 		{
 			//si la colision regresa verdadero tendra valor P antes de hacer el movimiento
 			P=copia;
 		}
 		jugador::borrar(copia);
-		jugador::pintar(P);
+		jugador::pintar(P,1);
 	}
 }
 bool jugador::colision(pieza &P)
@@ -185,16 +223,16 @@ bool jugador::colision(pieza &P)
 
 int main ()
 {
-	enemigo a;
-	jugador b;
+		jugador a;
 	pieza S;
-	int r=2;
-	b.seleccionar(S,r);
+	int r=0;
+	a.pasarmapa();
+	a.seleccionar(S,r);
 	while(true)
 	{
 		gotoxy(0,25);
-		a.pintarmapa();
-		b.mover(S);
+		a.dibujarmapaju();
+		a.mover(S);
 	}
 	//2,28 corresponde a origen y lo demas a perifericos
 	//pieza c={{2,28},{{2,0},{4,0},{6,0}},'P'};
@@ -203,8 +241,8 @@ int main ()
 	// se cambio los valores a 2 y 3 para que coincida con la tabla impresa en ma
 	//b.pintar(v);
 	//b.rotar(S);
-	b.pintar(S);
-	a.pintarmapa();
+	//b.pintar(S);
+	//a.pintarmapa();
 	
 	return 0;
 	
